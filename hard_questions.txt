@@ -3,7 +3,7 @@ A: 1999r.
 B: 2001r.
 C: 2003r.
 D: 2004r.
-3
+4
 Jak nazywal się I car Rosji?
 A: Iwan IV Grozny
 B: Wladyslaw I Wielki
