@@ -56,6 +56,31 @@ def questions_place():
     quest_label.place(x=600,y=150, anchor=CENTER)
     
     good_answer = linecache.getline(questions, random_question + 6)
+def next_exit_buttons():
+
+    global button_nq
+    global button_exit
+
+    button_nq = Button(root,
+                        text = "Następne pytanie",
+                        font=('Gill Sans Ultra Bold',15,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=10,
+                        disabledforeground='black',
+                        command=next_question,
+                        state = DISABLED)
+    button_exit = Button(root,
+                        text = "Zakończ",
+                        font=('Gill Sans Ultra Bold',15,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=10,
+                        disabledforeground='black',
+                        command=exit,
+                        state = DISABLED)
+
+    button_nq.place(x=600,y=600, anchor=CENTER)
 
 def answers_place():
     global button_A
@@ -64,6 +89,7 @@ def answers_place():
     global button_D
     global button_nq
     global questions
+    global button_exit
     ans1 = linecache.getline(questions, random_question + 2)
     ans2 = linecache.getline(questions, random_question + 3)
     ans3 = linecache.getline(questions, random_question + 4)
@@ -100,21 +126,14 @@ def answers_place():
                         pady=10,
                         disabledforeground='black',
                         command=lambda: check_answer(4))
-    button_nq = Button(root,
-                        text = "Następne pytanie",
-                        font=('Gill Sans Ultra Bold',15,'bold'),
-                        background='white',
-                        padx=10,
-                        pady=10,
-                        disabledforeground='black',
-                        command=next_question,
-                        state = DISABLED)
+
 
     button_A.place(x=300, y=300,anchor=CENTER)
     button_B.place(x=900, y=300,anchor=CENTER)
     button_C.place(x=300, y=450,anchor=CENTER)
     button_D.place(x=900, y=450,anchor=CENTER)
-    button_nq.place(x=600,y=600, anchor=CENTER)
+    button_nq.config(state=DISABLED)
+
 
 def check_answer(ans):
     button_A.config(background='red',state=DISABLED)
@@ -134,7 +153,12 @@ def check_answer(ans):
         user_score += 10
     
 
-    button_nq.config(state=ACTIVE)
+
+    if steps == 8:
+        button_exit.config(state=ACTIVE)
+    else:
+        button_nq.config(state=ACTIVE)
+
 
 
 
@@ -179,8 +203,12 @@ def next_question():
     if steps == 6 or steps == 7 or steps ==8:
         hard_level()
     print(steps)
+    if steps == 8:
+        button_nq.destroy()
+        button_exit.place(x=600,y=600, anchor=CENTER)
 
-
+def exit():
+    root.destroy()
 
 
 def easy_level():
@@ -234,6 +262,7 @@ def hard_level():
 
 def start():
     button_start.destroy()
+    next_exit_buttons()
     easy_level()
 
 
