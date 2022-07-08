@@ -1,10 +1,19 @@
 import random
 import linecache
 from tkinter import *
+from PIL import ImageTk, Image
 root = Tk()
 root.title("Quiz")
 root.geometry("1200x700")
-root.config(background='#de9518')
+root.config(background='#FEDE27')
+
+head_menu = Image.open("head_.png")
+
+resized_head = head_menu.resize((500,350), Image.ANTIALIAS)
+
+head_to_label = ImageTk.PhotoImage(resized_head)
+head_menu_label = Label(root, image=head_to_label,borderwidth=0)
+head_menu_label.place(x=630, y=180, anchor=CENTER)
 
 user_score = 0
 steps = 0
@@ -59,7 +68,7 @@ def questions_place():
 def next_exit_buttons():
 
     global button_nq
-    global button_exit
+    global button_end
 
     button_nq = Button(root,
                         text = "Następne pytanie",
@@ -70,14 +79,14 @@ def next_exit_buttons():
                         disabledforeground='black',
                         command=next_question,
                         state = DISABLED)
-    button_exit = Button(root,
+    button_end = Button(root,
                         text = "Zakończ",
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         padx=10,
                         pady=10,
                         disabledforeground='black',
-                        command=exit,
+                        command=end,
                         state = DISABLED)
 
     button_nq.place(x=600,y=600, anchor=CENTER)
@@ -150,12 +159,24 @@ def check_answer(ans):
     if int(good_answer) == 4:
         button_D.config(background='green')
     if int(good_answer) == ans:
-        user_score += 10
+        if steps == 0 or steps == 1 or steps == 2:
+            user_score += 5
+        if steps == 3 or steps == 4 or steps == 5:
+            user_score += 10
+        if steps == 6 or steps == 7 or steps == 8:
+            user_score += 15
+    if int(good_answer) != ans:
+        if steps == 0 or steps == 1 or steps == 2:
+            user_score -= 15
+        if steps == 3 or steps == 4 or steps == 5:
+            user_score -=10
+        if steps == 6 or steps == 7 or steps == 8:
+            user_score -=5
     
-
+    print(user_score)
 
     if steps == 8:
-        button_exit.config(state=ACTIVE)
+        button_end.config(state=ACTIVE)
     else:
         button_nq.config(state=ACTIVE)
 
@@ -168,6 +189,12 @@ def next_question():
     global random_question3
     global steps
     steps += 1
+    if steps == 1 or steps == 2 or steps == 3:
+        easy.destroy()
+    if steps == 4 or steps == 5 or steps == 6:
+        medium.destroy()
+    if steps == 7 or steps == 8:
+        hard.destroy()
     quest_label.destroy()
     button_A.destroy()
     button_B.destroy()
@@ -202,13 +229,52 @@ def next_question():
         medium_level()
     if steps == 6 or steps == 7 or steps ==8:
         hard_level()
-    print(steps)
     if steps == 8:
         button_nq.destroy()
-        button_exit.place(x=600,y=600, anchor=CENTER)
+        button_end.place(x=600,y=600, anchor=CENTER)
 
-def exit():
-    root.destroy()
+
+def end():
+    global button_try_again
+    global button_exit2
+    global user_score_label
+    global end_screen_label
+    hard.destroy()
+    quest_label.destroy()
+    button_A.destroy()
+    button_B.destroy()
+    button_C.destroy()
+    button_D.destroy()
+    button_end.destroy()
+    button_try_again = Button(root,
+                        text = "Zagraj ponownie",
+                        font=('Gill Sans Ultra Bold',15,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=10,
+                        disabledforeground='black',
+                        command=start,
+                        state = ACTIVE)
+    button_exit2 = Button(root,
+                        text = "Wyjdź",
+                        font=('Gill Sans Ultra Bold',15,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=10,
+                        disabledforeground='black',
+                        command=exit,
+                        state = ACTIVE)
+    end_screen_label = Label(root, text="Gratulacje!",
+                            background='#FEDE27',
+                            font=('Gill Sans Ultra Bold',30,'bold'))
+    user_score_label = Label(root, text="Twój wynik to: "+ str(user_score),
+                            background='#FEDE27',
+                            font=('Gill Sans Ultra Bold',20,'bold'))
+
+    end_screen_label.place(x=600, y=200,anchor=CENTER)
+    user_score_label.place(x=600, y=300,anchor=CENTER)
+    button_exit2.place(x=600, y=500,anchor=CENTER, width=300)
+    button_try_again.place(x=600, y=400,anchor=CENTER, width=300)
 
 
 def easy_level():
@@ -237,13 +303,12 @@ def medium_level():
                 relief=SUNKEN,
                 padx=10)
     
-    easy.destroy()
     medium.place(x=600,y=50, anchor=CENTER)
     questions_place()
     answers_place()
 
 def hard_level():
-
+    global hard
     #Define hard level label
     hard = Label(root,
                 text="Poziom trudny",
@@ -253,27 +318,58 @@ def hard_level():
                 relief=SUNKEN,
                 padx=10)
     
-    medium.destroy()
     hard.place(x=600,y=50, anchor=CENTER)
     questions_place()
     answers_place()
 
+def exit():
+    root.destroy()
 
+
+    
 
 def start():
+    global steps
+    global user_score
     button_start.destroy()
+    button_exit.destroy()
+    if steps == 8:
+        button_try_again.destroy()
+        button_exit2.destroy()
+        end_screen_label.destroy()
+        user_score_label.destroy()
+    if steps == 0:
+        head_menu_label.destroy()
+    steps = 0
+    user_score = 0
+
     next_exit_buttons()
     easy_level()
 
-
+button_exit = Button(root,
+                        text = "Wyjdź",
+                        font=('Gill Sans Ultra Bold',20,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=15,
+                        disabledforeground='black',
+                        command=exit,
+                        state = ACTIVE)
 
 button_start = Button(root,
-                        text='Kliknij, aby rozpocząć!',
-                        command = start,
-                        pady=100,
-                        font='Arial')
+                        text = "Zagraj",
+                        font=('Gill Sans Ultra Bold',20,'bold'),
+                        background='white',
+                        padx=10,
+                        pady=15,
+                        disabledforeground='black',
+                        command=start,
+                        state = ACTIVE)
 
-button_start.place(x=600, y=300,anchor=CENTER, width=500)
+
+
+button_start.place(x=600, y=400,anchor=CENTER, width=250)
+button_exit.place(x=600, y=500,anchor=CENTER, width=250)
 
 
 root.mainloop()
