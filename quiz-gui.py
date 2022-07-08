@@ -56,7 +56,7 @@ def questions_place():
     quest_label = Label(root, 
                     text = quest,
                     font = ('Gill Sans Ultra Bold',15,'bold'),
-                    fg='#5cfcff',
+                    fg='#F46036',
                     bg='black',
                     relief = SUNKEN,
                     pady = 10,
@@ -137,10 +137,10 @@ def answers_place():
                         command=lambda: check_answer(4))
 
 
-    button_A.place(x=300, y=300,anchor=CENTER)
-    button_B.place(x=900, y=300,anchor=CENTER)
-    button_C.place(x=300, y=450,anchor=CENTER)
-    button_D.place(x=900, y=450,anchor=CENTER)
+    button_A.place(x=250, y=250)
+    button_B.place(x=750, y=250)
+    button_C.place(x=250, y=400)
+    button_D.place(x=750, y=400)
     button_nq.config(state=DISABLED)
 
 
