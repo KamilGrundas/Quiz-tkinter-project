@@ -98,7 +98,7 @@ def questions_place():
                     bg='black',
                     relief = SUNKEN,
                     pady = 30,
-                    width=50)
+                    padx = 30)
 
     quest_label.place(x=600,y=150, anchor=CENTER)
 #Define good answer
@@ -176,10 +176,10 @@ def answers_place():
                         command=lambda: check_answer(4))
 
 
-    button_A.place(x=250, y=250,width=350)
-    button_B.place(x=750, y=250,width=350)
-    button_C.place(x=250, y=400,width=350)
-    button_D.place(x=750, y=400,width=350)
+    button_A.place(x=180, y=250,width=350)
+    button_B.place(x=680, y=250,width=350)
+    button_C.place(x=180, y=400,width=350)
+    button_D.place(x=680, y=400,width=350)
     button_nq.config(state=DISABLED)
 
 
