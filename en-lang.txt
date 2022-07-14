@@ -1,0 +1,10 @@
+Next question
+Complete
+Play again!
+Exit
+Congratulations!
+Your score:
+Easy level
+Medium level
+Hard level
+Play
