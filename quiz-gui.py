@@ -18,7 +18,7 @@ root.config(background='#FEDE27')
 #Menu logo open
 head_menu = Image.open("head_.png")
 #Menu logo resize
-resized_head = head_menu.resize((500,350), Image.ANTIALIAS)
+resized_head = head_menu.resize((500,350), Image.Resampling.LANCZOS)
 #Menu logo define and place
 head_to_label = ImageTk.PhotoImage(resized_head)
 head_menu_label = Label(root, image=head_to_label,borderwidth=0)
@@ -26,6 +26,22 @@ head_menu_label.place(x=630, y=180, anchor=CENTER)
 
 user_score = 0
 steps = 0
+
+def language_def(numb):
+    global language
+    global lang
+
+    if numb == 1:
+        language = str('en-lang.txt')
+        lang = 1
+    if numb == 2:
+        language = str('pl-lang.txt')
+        lang = 2
+
+    button_english.destroy()
+    button_polish.destroy()
+    main_menu()
+
 
 def draw_questions():  #Draw questions
     global random_question1
@@ -51,11 +67,20 @@ def questions_place():
     global questions
 #Define level of the question
     if steps == 0:
-        questions = str('easy_questions.txt')
+        if lang == 1:
+            questions = str('easy_questions-en.txt')
+        else:
+            questions = str('easy_questions-pl.txt')
     if steps == 3:
-        questions = str('medium_questions.txt')
+        if lang == 1:
+            questions = str('medium_questions-en.txt')
+        else:
+            questions = str('medium_questions-pl.txt')
     if steps == 6:
-        questions = str('hard_questions.txt')
+        if lang == 1:
+            questions = str('hard_questions-en.txt')
+        else:
+            questions = str('hard_questions-pl.txt')
 
 #Place question depends at steps
     if steps == 0 or steps == 3 or steps == 6:
@@ -65,14 +90,14 @@ def questions_place():
     if steps == 2 or steps == 5 or steps ==8:
         random_question = random_question3
     
-    quest = linecache.getline(questions, random_question + 1)
+    quest = linecache.getline(questions, random_question + 1).strip()
     quest_label = Label(root, 
                     text = quest,
-                    font = ('Gill Sans Ultra Bold',15,'bold'),
+                    font = ('Gill Sans Ultra Bold',17,'bold'),
                     fg='white',
                     bg='black',
                     relief = SUNKEN,
-                    pady = 10,
+                    pady = 30,
                     width=50)
 
     quest_label.place(x=600,y=150, anchor=CENTER)
@@ -82,29 +107,28 @@ def next_exit_buttons():
 
     global button_nq
     global button_end
-
     button_nq = Button(root,
-                        text = "Następne pytanie",
+                        text = linecache.getline(language,1).strip(),
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         activebackground='white',
-                        padx=10,
-                        pady=10,
+                        padx=15,
+                        pady=18,
                         disabledforeground='#6f6f6f',
                         command=next_question,
                         state = DISABLED)
     button_end = Button(root,
-                        text = "Zakończ",
+                        text = linecache.getline(language,2).strip(),
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         activebackground='white',
                         padx=10,
-                        pady=10,
+                        pady=18,
                         disabledforeground='#6f6f6f',
                         command=end,
                         state = DISABLED)
 
-    button_nq.place(x=600,y=600, anchor=CENTER)
+    button_nq.place(x=600,y=600, anchor=CENTER,width=300)
 
 def answers_place():
     global button_A
@@ -114,16 +138,16 @@ def answers_place():
     global button_nq
     global questions
     global button_exit
-    ans1 = linecache.getline(questions, random_question + 2)
-    ans2 = linecache.getline(questions, random_question + 3)
-    ans3 = linecache.getline(questions, random_question + 4)
-    ans4 = linecache.getline(questions, random_question + 5)
+    ans1 = linecache.getline(questions, random_question + 2).strip()
+    ans2 = linecache.getline(questions, random_question + 3).strip()
+    ans3 = linecache.getline(questions, random_question + 4).strip()
+    ans4 = linecache.getline(questions, random_question + 5).strip()
     button_A = Button(root,
                         text = ans1,
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         padx=10,
-                        pady=10,
+                        pady=20,
                         disabledforeground='black',
                         command=lambda: check_answer(1))
     button_B = Button(root,
@@ -131,7 +155,7 @@ def answers_place():
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         padx=10,
-                        pady=10,
+                        pady=20,
                         disabledforeground='black',
                         command=lambda: check_answer(2))
     button_C = Button(root,
@@ -139,7 +163,7 @@ def answers_place():
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         padx=10,
-                        pady=10,
+                        pady=20,
                         disabledforeground='black',
                         command=lambda: check_answer(3))
     button_D = Button(root,
@@ -147,15 +171,15 @@ def answers_place():
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         padx=10,
-                        pady=10,
+                        pady=20,
                         disabledforeground='black',
                         command=lambda: check_answer(4))
 
 
-    button_A.place(x=250, y=250)
-    button_B.place(x=750, y=250)
-    button_C.place(x=250, y=400)
-    button_D.place(x=750, y=400)
+    button_A.place(x=250, y=250,width=350)
+    button_B.place(x=750, y=250,width=350)
+    button_C.place(x=250, y=400,width=350)
+    button_D.place(x=750, y=400,width=350)
     button_nq.config(state=DISABLED)
 
 
@@ -245,29 +269,29 @@ def end():
     button_D.destroy()
     button_end.destroy()
     button_try_again = Button(root,
-                        text = "Zagraj ponownie",
+                        text = linecache.getline(language,3).strip(),
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         activebackground='white',
                         padx=10,
-                        pady=10,
+                        pady=16,
                         disabledforeground='black',
                         command=start,
                         state = ACTIVE)
     button_exit2 = Button(root,
-                        text = "Wyjdź",
+                        text = linecache.getline(language,4).strip(),
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
                         activebackground='white',
                         padx=10,
-                        pady=10,
+                        pady=16,
                         disabledforeground='black',
                         command=exit,
                         state = ACTIVE)
-    end_screen_label = Label(root, text="Gratulacje!",
+    end_screen_label = Label(root, text=linecache.getline(language,5).strip(),
                             background='#FEDE27',
                             font=('Gill Sans Ultra Bold',30,'bold'))
-    user_score_label = Label(root, text="Twój wynik to: "+ str(user_score),
+    user_score_label = Label(root, text=linecache.getline(language,6).strip()+ " " + str(user_score),
                             background='#FEDE27',
                             font=('Gill Sans Ultra Bold',20,'bold'))
 
@@ -281,7 +305,7 @@ def easy_level():
     global easy
     #Define easy level label
     easy = Label(root,
-                text="Poziom łatwy",
+                text=linecache.getline(language,7).strip(),
                 font=('Gill Sans Ultra Bold', 30),
                 fg='#4e8c0b',
                 bg='black',
@@ -296,7 +320,7 @@ def medium_level():
     global medium
     #Define medium level label
     medium = Label(root,
-                text="Poziom średni",
+                text=linecache.getline(language,8).strip(),
                 font=('Gill Sans Ultra Bold', 30),
                 fg='#f7720c',
                 bg='black',
@@ -311,7 +335,7 @@ def hard_level():
     global hard
     #Define hard level label
     hard = Label(root,
-                text="Poziom trudny",
+                text=linecache.getline(language,9).strip(),
                 font=('Gill Sans Ultra Bold', 30),
                 fg='#ad0909',
                 bg='black',
@@ -346,34 +370,61 @@ def start():
     next_exit_buttons()
     easy_level()
 
-draw_questions()
+def main_menu():
+    global button_exit
+    global button_start
+    draw_questions()
 
-button_exit = Button(root,
-                        text = "Wyjdź",
-                        font=('Gill Sans Ultra Bold',20,'bold'),
-                        background='white',
-                        activebackground='white',
-                        padx=10,
-                        pady=15,
-                        disabledforeground='black',
-                        command=exit,
-                        state = ACTIVE)
+    button_exit = Button(root,
+                            text = linecache.getline(language,4).strip(),
+                            font=('Gill Sans Ultra Bold',20,'bold'),
+                            background='white',
+                            activebackground='white',
+                            padx=10,
+                            pady=12,
+                            disabledforeground='black',
+                            command=exit,
+                            state = ACTIVE)
 
-button_start = Button(root,
-                        text = "Zagraj",
-                        font=('Gill Sans Ultra Bold',20,'bold'),
-                        background='white',
-                        activebackground='white',
-                        padx=10,
-                        pady=15,
-                        disabledforeground='black',
-                        command=start,
-                        state = ACTIVE)
+    button_start = Button(root,
+                            text = linecache.getline(language,10).strip(),
+                            font=('Gill Sans Ultra Bold',20,'bold'),
+                            background='white',
+                            activebackground='white',
+                            padx=10,
+                            pady=12,
+                            disabledforeground='black',
+                            command=start,
+                            state = ACTIVE)
 
 
 
-button_start.place(x=600, y=400,anchor=CENTER, width=250)
-button_exit.place(x=600, y=500,anchor=CENTER, width=250)
+    button_start.place(x=600, y=400,anchor=CENTER, width=250)
+    button_exit.place(x=600, y=500,anchor=CENTER, width=250)
 
+button_english = Button(root,
+                            text = "English",
+                            font=('Gill Sans Ultra Bold',20,'bold'),
+                            background='white',
+                            activebackground='white',
+                            padx=10,
+                            pady=12,
+                            disabledforeground='black',
+                            command=lambda: language_def(1),
+                            state = ACTIVE)
+                    
+button_polish = Button(root,
+                            text = "Polish",
+                            font=('Gill Sans Ultra Bold',20,'bold'),
+                            background='white',
+                            activebackground='white',
+                            padx=10,
+                            pady=12,
+                            disabledforeground='black',
+                            command=lambda: language_def(2),
+                            state = ACTIVE)
+
+button_english.place(x=600, y=400,anchor=CENTER, width=250)
+button_polish.place(x=600, y=500,anchor=CENTER, width=250)
 
 root.mainloop()
