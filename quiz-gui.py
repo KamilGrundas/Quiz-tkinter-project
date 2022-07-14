@@ -4,13 +4,22 @@ from tkinter import *
 from PIL import ImageTk, Image
 root = Tk()
 root.title("Quiz")
-root.geometry("1200x700")
+root.iconbitmap('icon.ico')
+w = 1200
+h = 700
+ws = root.winfo_screenwidth() # width of the screen
+hs = root.winfo_screenheight() # height of the screen
+x = (ws/2) - (w/2)
+y = ((hs-100)/2) - (h/2)
+root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+root.resizable(False, False)
 root.config(background='#FEDE27')
 
+#Menu logo open
 head_menu = Image.open("head_.png")
-
+#Menu logo resize
 resized_head = head_menu.resize((500,350), Image.ANTIALIAS)
-
+#Menu logo define and place
 head_to_label = ImageTk.PhotoImage(resized_head)
 head_menu_label = Label(root, image=head_to_label,borderwidth=0)
 head_menu_label.place(x=630, y=180, anchor=CENTER)
@@ -18,25 +27,29 @@ head_menu_label.place(x=630, y=180, anchor=CENTER)
 user_score = 0
 steps = 0
 
-            #Draw questions
-random_question1 = random.randrange(0,35,6)
-random_question2 = random.randrange(0,35,6)
-random_question3 = random.randrange(0,35,6)
+def draw_questions():  #Draw questions
+    global random_question1
+    global random_question2
+    global random_question3
 
-while random_question2 == random_question1:
+    random_question1 = random.randrange(0,35,6)
     random_question2 = random.randrange(0,35,6)
-while random_question3 == random_question1 or random_question3 == random_question2:
     random_question3 = random.randrange(0,35,6)
 
+    while random_question2 == random_question1:
+        random_question2 = random.randrange(0,35,6)
+    while random_question3 == random_question1 or random_question3 == random_question2:
+        random_question3 = random.randrange(0,35,6)
 
 
+#Questions place function
 def questions_place():
     global random_question
     global good_answer
     global quest_label
     global steps
     global questions
-
+#Define level of the question
     if steps == 0:
         questions = str('easy_questions.txt')
     if steps == 3:
@@ -44,7 +57,7 @@ def questions_place():
     if steps == 6:
         questions = str('hard_questions.txt')
 
-
+#Place question depends at steps
     if steps == 0 or steps == 3 or steps == 6:
         random_question = random_question1
     if steps == 1 or steps == 4 or steps == 7:
@@ -56,14 +69,14 @@ def questions_place():
     quest_label = Label(root, 
                     text = quest,
                     font = ('Gill Sans Ultra Bold',15,'bold'),
-                    fg='#F46036',
+                    fg='white',
                     bg='black',
                     relief = SUNKEN,
                     pady = 10,
                     width=50)
 
     quest_label.place(x=600,y=150, anchor=CENTER)
-    
+#Define good answer
     good_answer = linecache.getline(questions, random_question + 6)
 def next_exit_buttons():
 
@@ -74,18 +87,20 @@ def next_exit_buttons():
                         text = "Następne pytanie",
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=10,
-                        disabledforeground='black',
+                        disabledforeground='#6f6f6f',
                         command=next_question,
                         state = DISABLED)
     button_end = Button(root,
                         text = "Zakończ",
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=10,
-                        disabledforeground='black',
+                        disabledforeground='#6f6f6f',
                         command=end,
                         state = DISABLED)
 
@@ -173,7 +188,6 @@ def check_answer(ans):
         if steps == 6 or steps == 7 or steps == 8:
             user_score -=5
     
-    print(user_score)
 
     if steps == 8:
         button_end.config(state=ACTIVE)
@@ -200,28 +214,12 @@ def next_question():
     button_B.destroy()
     button_C.destroy()
     button_D.destroy()
-    if steps == 3:
-            #Draw questions
-        random_question1 = random.randrange(0,35,6)
-        random_question2 = random.randrange(0,35,6)
-        random_question3 = random.randrange(0,35,6)
 
-        while random_question2 == random_question1:
-            random_question2 = random.randrange(0,35,6)
-        while random_question3 == random_question1 or random_question3 == random_question2:
-            random_question3 = random.randrange(0,35,6)
+    if steps == 3:
+        draw_questions()
 
     if steps == 6:
-
-            #Draw questions
-        random_question1 = random.randrange(0,35,6)
-        random_question2 = random.randrange(0,35,6)
-        random_question3 = random.randrange(0,35,6)
-
-        while random_question2 == random_question1:
-            random_question2 = random.randrange(0,35,6)
-        while random_question3 == random_question1 or random_question3 == random_question2:
-            random_question3 = random.randrange(0,35,6)
+        draw_questions()
 
     if steps == 0 or steps == 1 or steps == 2:
         easy_level()
@@ -250,6 +248,7 @@ def end():
                         text = "Zagraj ponownie",
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=10,
                         disabledforeground='black',
@@ -259,6 +258,7 @@ def end():
                         text = "Wyjdź",
                         font=('Gill Sans Ultra Bold',15,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=10,
                         disabledforeground='black',
@@ -346,10 +346,13 @@ def start():
     next_exit_buttons()
     easy_level()
 
+draw_questions()
+
 button_exit = Button(root,
                         text = "Wyjdź",
                         font=('Gill Sans Ultra Bold',20,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=15,
                         disabledforeground='black',
@@ -360,6 +363,7 @@ button_start = Button(root,
                         text = "Zagraj",
                         font=('Gill Sans Ultra Bold',20,'bold'),
                         background='white',
+                        activebackground='white',
                         padx=10,
                         pady=15,
                         disabledforeground='black',
