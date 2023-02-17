@@ -17,7 +17,7 @@ class QuizApp():
             self.language.another_language()
 
         self.button_destroy()
-        self.main_menu()
+        self.main_menu(False)
 
         
     def __init__(self):
@@ -39,26 +39,38 @@ class QuizApp():
         self.resized_head = self.head_menu.resize((500,350), Image.Resampling.LANCZOS)
         #Menu logo define and place
         self.head_to_label = ImageTk.PhotoImage(self.resized_head)
-        self.head_menu_label = Label(self.root, image=self.head_to_label,borderwidth=0)
-        self.head_menu_label.place(x=630, y=180, anchor=CENTER)
+
 
         #Define list of created buttons
         self.buttons_list = []
 
-        self.language = Language()
+        self.head_menu_place()
+        self.language_buttons()
         #Place buttons with (text, xplace, yplace, width, command(language selection))
-        self.button_place(self.language.a_language, 600, 550, 250, lambda: self.language_def(True))
-        self.button_place(self.language.english, 600, 450, 250, lambda: self.language_def(False))
 
-        
+    def head_menu_place(self):
 
-    def button_place(self, text, x, y, width, command):
-        
+        self.head_menu_label = Label(self.root, image=self.head_to_label,borderwidth=0)
+        self.head_menu_label.place(x=630, y=180, anchor=CENTER)
+
+
+
+
+    def language_buttons(self):
+
         self.buttons = Buttons()
+        self.button_destroy()
+
+        self.language = Language()
+
+        self.button_place(self.language.a_language, self.buttons.menufont, 600, 550, 250, lambda: self.language_def(True))
+        self.button_place(self.language.english, self.buttons.menufont, 600, 450, 250, lambda: self.language_def(False))
+
+    def button_place(self, text, font, x, y, width, command):
         
         self.button = Button(self.root,
                                     text = text,
-                                    font=self.buttons.menufont,
+                                    font= font,
                                     background=self.buttons.background,
                                     activebackground=self.buttons.activebackground,
                                     padx=self.buttons.padx,
@@ -78,15 +90,28 @@ class QuizApp():
         for self.button in self.buttons_list:
             self.button.destroy()
 
-    def main_menu(self):
+    def main_menu(self, logo):
 
-        self.button_place(self.language.play, 600, 450, 250, self.play)
-        self.button_place(self.language.exit, 600, 550, 250, self.exit)
-        self.button_place(self.language.settings, 100,100, 100, self.language_def)
+        if logo == True:
+            self.head_menu_place()
+
+        self.button_place(self.language.play, self.buttons.menufont, 600, 450, 250, self.play)
+        self.button_place(self.language.exit, self.buttons.menufont, 600, 550, 250, self.exit)
+        self.button_place(self.language.language, self.buttons.settingsfont, 100,100, 100, self.language_buttons)
+        self.button_place(self.language.settings, self.buttons.settingsfont, 100,200, 100, self.settings_menu)
 
     def play(self):
 
         print("graj")
+
+    def settings_menu(self):
+
+        self.button_destroy()
+
+
+        self.button_place(self.language.back, self.buttons.menufont, 600, 550,250, lambda: self.main_menu(True))
+
+        self.head_menu_label.destroy()
 
     def exit(self):
         app.root.quit()

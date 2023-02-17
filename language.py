@@ -8,6 +8,8 @@ class Language():
         self.a_language = "Polish"
         self.play = "Play"
         self.exit = "Exit"
+        self.back = "Back"
+        self.language = "Language"
         self.settings = "Settings"
         self.yourscore = "Your score:"
 
@@ -17,5 +19,6 @@ class Language():
         #Another language
         self.play = "Graj"
         self.exit = "Wyjdź"
+        self.language = "Język"
         self.settings = "Ustawienia"
         self.yourscore = "Twój wynik:"
