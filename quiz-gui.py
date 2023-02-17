@@ -5,7 +5,7 @@ from PIL import ImageTk, Image
 root = Tk()
 root.title("Quiz")
 root.iconbitmap('icon.ico')
-w = 1200
+w = 1250
 h = 700
 ws = root.winfo_screenwidth() # width of the screen
 hs = root.winfo_screenheight() # height of the screen
