@@ -11,6 +11,8 @@ class Language():
         self.back = "Back"
         self.language = "Language"
         self.settings = "Settings"
+        self.active_questions = "Active questions"
+        self.no_active_questions = "No active questions"
         self.yourscore = "Your score:"
 
 
