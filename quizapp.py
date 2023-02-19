@@ -30,6 +30,7 @@ class QuizApp():
         self.hs = self.root.winfo_screenheight() # height of the screen
         self.x = (self.ws/2) - (self.settings.w/2)
         self.y = ((self.hs-100)/2) - (self.settings.h/2)
+        self.root.minsize(self.settings.w, self.settings.h)
         self.root.geometry('%dx%d+%d+%d' % (self.settings.w, self.settings.h, self.x, self.y))
         self.root.resizable(True, True)
         self.root.config(background=self.settings.background_color)
@@ -63,16 +64,16 @@ class QuizApp():
 
         self.language = Language()
 
-        self.button_place(self.language.a_language, 
+        self.button_place(self.root,self.language.a_language, 
                             self.settings.menufont, 
                             lambda: self.language_def(True), 20, CENTER, TOP)
-        self.button_place(self.language.english, 
+        self.button_place(self.root,self.language.english, 
                             self.settings.menufont, 
                             lambda: self.language_def(False), 20, CENTER, TOP)
 
-    def button_place(self, text, font, command, width, position, side):
+    def button_place(self, place, text, font, command, width, position, side):
         
-        self.button = Button(self.root,
+        self.button = Button(place,
                                     text = text,
                                     font= font,
                                     background=self.buttons.background,
@@ -98,15 +99,17 @@ class QuizApp():
     def main_menu(self, logo):
 
         if logo == True:
-            self.head_menu_place()
-            self.frame_active_questions.destroy()
-            self.frame_no_active_questions.destroy()
+            self.frame_center.destroy()
+            self.frame_buttons.destroy()
             self.button_destroy()
+            self.head_menu_place()
 
-        self.button_place(self.language.play, self.settings.menufont, self.play, 20, CENTER, TOP)
-        self.button_place(self.language.exit, self.settings.menufont, self.exit, 20, CENTER, TOP)
-        self.button_place(self.language.language, self.settings.settingsfont, self.language_buttons, 20, SE, TOP)
-        self.button_place(self.language.settings, self.settings.settingsfont, self.settings_menu, 20, SE, TOP)
+
+        self.button_place(self.root,self.language.play, self.settings.menufont, self.play, 20, CENTER, TOP)
+        self.button_place(self.root,self.language.exit, self.settings.menufont, self.exit, 20, CENTER, TOP)
+        self.button_place(self.root,self.language.settings, self.settings.settingsfont, self.settings_menu, 20, SE, BOTTOM)
+        self.button_place(self.root,self.language.language, self.settings.settingsfont, self.language_buttons, 20, SE, BOTTOM)
+
 
     def play(self):
 
@@ -114,11 +117,7 @@ class QuizApp():
 
     def list_questions(self):
 
-        self.frame_active_questions = Frame(self.root, background=self.settings.background_color)
-        self.frame_active_questions.pack(side=RIGHT)
-
-        self.frame_no_active_questions = Frame(self.root, background=self.settings.background_color)
-        self.frame_no_active_questions.pack(padx=10, pady=10, side='left')
+        self.frames()
 
         self.active_questions_l = Label(self.frame_active_questions, 
                                         text=self.language.active_questions, 
@@ -137,21 +136,50 @@ class QuizApp():
         self.active_questions = Listbox(self.frame_active_questions,
                                             font=self.settings.settingsfont,
                                             width= 50,
-                                            height= 20)
+                                            height= 25)
 
         # self.scrollbar = Scrollbar(self.root, orient='vertical', command=self.active_questions.yview)
         # self.active_questions.config(yscrollcommand=self.scrollbar.set)
 
         self.active_questions.pack(side=TOP)
-
         # self.scrollbar.pack(side=RIGHT, fill=Y)
 
         self.no_active_questions = Listbox(self.frame_no_active_questions,
                                             font=self.settings.settingsfont,
                                             width= 50,
-                                            height= 20)
+                                            height= 25)
 
         self.no_active_questions.pack(side=TOP)
+
+    def frames(self):
+        self.frame_center = Frame(self.root, background=self.settings.background_color)
+        self.frame_center.pack(anchor=CENTER, side=TOP)
+
+        self.frame_no_active_questions = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_no_active_questions.pack(padx=10, pady=10, anchor=CENTER, side=LEFT)
+
+        self.button_place(self.frame_center,self.language.move, 
+                            self.settings.menufont, 
+                            lambda: self.main_menu(True), 20, CENTER, LEFT)
+
+        self.frame_active_questions = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_active_questions.pack(padx=10, pady=10, anchor=CENTER, side=LEFT)
+
+        self.frame_buttons = Frame(self.root, background=self.settings.background_color)
+        self.frame_buttons.pack(anchor=CENTER ,side=BOTTOM)
+
+        self.button_place(self.frame_buttons,self.language.add, 
+                            self.settings.menufont, 
+                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+        self.button_place(self.frame_buttons,self.language.edit, 
+                            self.settings.menufont, 
+                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+        self.button_place(self.frame_buttons,self.language.delete, 
+                            self.settings.menufont, 
+                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+        self.button_place(self.frame_buttons,self.language.back, 
+                            self.settings.menufont, 
+                            lambda: self.main_menu(True), 15, CENTER, LEFT)
         
 
     
@@ -160,8 +188,6 @@ class QuizApp():
 
         self.button_destroy()
         self.list_questions()
-
-        self.button_place(self.language.back, self.settings.menufont, lambda: self.main_menu(True), 20, CENTER, BOTTOM)
         self.head_menu_label.destroy()
 
 

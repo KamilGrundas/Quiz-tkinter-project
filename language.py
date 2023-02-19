@@ -13,6 +13,10 @@ class Language():
         self.settings = "Settings"
         self.active_questions = "Active questions"
         self.no_active_questions = "No active questions"
+        self.move = "Move"
+        self.add = "Add"
+        self.edit = "Edit"
+        self.delete = "Delete"
         self.yourscore = "Your score:"
 
 
