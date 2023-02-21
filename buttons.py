@@ -12,3 +12,5 @@ class Buttons():
         self.padx=10,
         self.pady=12,
         self.disabledforeground='black',
+        self.selected_background = 'green',
+        self.bad_answer_background = 'red'

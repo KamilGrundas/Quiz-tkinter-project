@@ -12,5 +12,6 @@ class Settings():
 
         #Fonts
         self.settingsfont = ("Comic Sans MS", 10)
-        self.menufont = ("Comic Sans MS", 20)       
+        self.menufont = ("Comic Sans MS", 20)    
+        self.edit_section_font = ("Comic Sans MS", 25)      
 

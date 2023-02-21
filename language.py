@@ -20,6 +20,9 @@ class Language():
         self.yourscore = "Your score:"
 
 
+        self.question = "Question:"
+
+
     def another_language(self):
 
         #Another language

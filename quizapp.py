@@ -99,15 +99,13 @@ class QuizApp():
     def main_menu(self, logo):
 
         if logo == True:
-            self.frame_center.destroy()
-            self.frame_buttons.destroy()
-            self.button_destroy()
+            self.frames_destroy()
             self.head_menu_place()
 
 
         self.button_place(self.root,self.language.play, self.settings.menufont, self.play, 20, CENTER, TOP)
         self.button_place(self.root,self.language.exit, self.settings.menufont, self.exit, 20, CENTER, TOP)
-        self.button_place(self.root,self.language.settings, self.settings.settingsfont, self.settings_menu, 20, SE, BOTTOM)
+        self.button_place(self.root,self.language.settings, self.settings.settingsfont,lambda: self.settings_menu(False), 20, SE, BOTTOM)
         self.button_place(self.root,self.language.language, self.settings.settingsfont, self.language_buttons, 20, SE, BOTTOM)
 
 
@@ -118,22 +116,23 @@ class QuizApp():
     def list_questions(self):
 
         self.frames()
+        self.buttons_settings()
 
-        self.active_questions_l = Label(self.frame_active_questions, 
+        self.active_questions_l = Label(self.frame_right2, 
                                         text=self.language.active_questions, 
                                         font=self.settings.menufont,
                                         background=self.settings.background_color)
 
         self.active_questions_l.pack(side=TOP)
 
-        self.active_questions_l = Label(self.frame_no_active_questions, 
+        self.active_questions_l = Label(self.frame_left2, 
                                         text=self.language.no_active_questions,
                                         font=self.settings.menufont,
                                         background=self.settings.background_color)
 
         self.active_questions_l.pack(side=TOP)
 
-        self.active_questions = Listbox(self.frame_active_questions,
+        self.active_questions = Listbox(self.frame_right2,
                                             font=self.settings.settingsfont,
                                             width= 50,
                                             height= 25)
@@ -144,33 +143,157 @@ class QuizApp():
         self.active_questions.pack(side=TOP)
         # self.scrollbar.pack(side=RIGHT, fill=Y)
 
-        self.no_active_questions = Listbox(self.frame_no_active_questions,
+        self.no_active_questions = Listbox(self.frame_left2,
                                             font=self.settings.settingsfont,
                                             width= 50,
                                             height= 25)
 
         self.no_active_questions.pack(side=TOP)
 
-    def frames(self):
-        self.frame_center = Frame(self.root, background=self.settings.background_color)
-        self.frame_center.pack(anchor=CENTER, side=TOP)
+    def frames_destroy(self):
+        self.frame_center.destroy()
+        self.frame_buttons.destroy()
+        self.frame_top.destroy()
 
-        self.frame_no_active_questions = Frame(self.frame_center, background=self.settings.background_color)
-        self.frame_no_active_questions.pack(padx=10, pady=10, anchor=CENTER, side=LEFT)
+    def add_question(self):
+
+        self.frames_destroy()
+        self.frames()
+        self.edit_section_labels()
+        self.entries_place()
+        self.edit_section_buttons()
+
+    def edit_section_buttons(self):
+
+
+        self.button_place(self.frame_buttons,self.language.add, 
+                            self.settings.menufont, 
+                            self.add_question, 15, CENTER, LEFT)
+
+        self.button_place(self.frame_buttons,self.language.back, 
+                            self.settings.menufont, 
+                            lambda: self.settings_menu(True), 15, CENTER, LEFT)
+
+
+    def entries_place(self):
+
+        self.question_entry = Entry(self.frame_top,
+                                    font=self.settings.menufont,
+                                    width=50)
+        self.question_entry.pack(pady= 50, side=RIGHT)
+
+        self.entry_answer_A = Entry(self.frame_left2,
+                                    font=self.settings.edit_section_font)
+        self.entry_answer_A.pack(pady=60)
+
+        self.entry_answer_B = Entry(self.frame_right2,
+                                    font=self.settings.edit_section_font)
+        self.entry_answer_B.pack(pady=60)
+
+        self.entry_answer_C = Entry(self.frame_left2,
+                                    font=self.settings.edit_section_font)
+        self.entry_answer_C.pack(pady=60)
+
+        self.entry_answer_D = Entry(self.frame_right2,
+                                    font=self.settings.edit_section_font)
+        self.entry_answer_D.pack(pady=60)
+
+    def edit_section_labels(self):
+
+        self.question_label = Label(self.frame_top, 
+                                        text=self.language.question,
+                                        font=self.settings.edit_section_font,
+                                        background=self.settings.background_color)
+        self.question_label.pack(side=LEFT, pady=50)
+
+        self.answer_A_label = Button(self.frame_left, 
+                                        text="A:",
+                                        font=self.settings.edit_section_font,
+                                        background=self.buttons.background,
+                                        width=4,
+                                        command= lambda: self.good_answer_highlight(1))
+        self.answer_A_label.pack(pady=40)
+
+        self.answer_B_label = Button(self.frame_right, 
+                                        text="B:",
+                                        font=self.settings.edit_section_font,
+                                        background=self.buttons.background,
+                                        width=4,
+                                        command= lambda: self.good_answer_highlight(2))
+        self.answer_B_label.pack(pady=40)
+
+        self.answer_C_label = Button(self.frame_left, 
+                                        text="C:",
+                                        font=self.settings.edit_section_font,
+                                        width= 4,
+                                        background=self.buttons.background,
+                                        command= lambda: self.good_answer_highlight(3))
+        self.answer_C_label.pack(pady=40)
+
+        self.answer_D_label = Button(self.frame_right, 
+                                        text="D:",
+                                        font=self.settings.edit_section_font,
+                                        background=self.buttons.background,
+                                        width=4,
+                                        command= lambda: self.good_answer_highlight(4))
+        self.answer_D_label.pack(pady=40)
+
+    def good_answer_highlight(self, answer):
+
+        self.answer_A_label.config(background=self.buttons.bad_answer_background)
+        self.answer_B_label.config(background=self.buttons.bad_answer_background)
+        self.answer_C_label.config(background=self.buttons.bad_answer_background)
+        self.answer_D_label.config(background=self.buttons.bad_answer_background)
+
+        if answer == 1:
+            self.answer_A_label.config(background=self.buttons.selected_background)
+        elif answer == 2:
+            self.answer_B_label.config(background=self.buttons.selected_background)
+        elif answer == 3:
+            self.answer_C_label.config(background=self.buttons.selected_background)
+        elif answer == 4:
+            self.answer_D_label.config(background=self.buttons.selected_background)
+
+    def frames(self):
+
+        #Top frame
+        self.frame_top = Frame(self.root, background=self.settings.background_color)
+        self.frame_top.pack(anchor=CENTER, side=TOP)
+
+        #Main center frame
+        self.frame_center = Frame(self.root, background=self.settings.background_color)
+        self.frame_center.pack(anchor=CENTER)
+
+        #Frame for A,B,C,D labels
+        self.frame_left = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_left.pack(pady=10, anchor=CENTER, side=LEFT)
+
+        #Frame for entries and listboxes left side
+        self.frame_left2 = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_left2.pack(padx=10, pady=10, anchor=CENTER, side=LEFT)
+
+        self.frame_right = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_right.pack(pady=10, anchor=CENTER, side=LEFT)
+
+        #Frame for entries and listboxes right side
+        self.frame_right2 = Frame(self.frame_center, background=self.settings.background_color)
+        self.frame_right2.pack(padx=10, pady=10, anchor=CENTER, side=RIGHT)
+
+        #Frame for buttons
+        self.frame_buttons = Frame(self.root, background=self.settings.background_color)
+        self.frame_buttons.pack(side=BOTTOM)
+
+
+
+    def buttons_settings(self):
 
         self.button_place(self.frame_center,self.language.move, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 20, CENTER, LEFT)
 
-        self.frame_active_questions = Frame(self.frame_center, background=self.settings.background_color)
-        self.frame_active_questions.pack(padx=10, pady=10, anchor=CENTER, side=LEFT)
-
-        self.frame_buttons = Frame(self.root, background=self.settings.background_color)
-        self.frame_buttons.pack(anchor=CENTER ,side=BOTTOM)
-
         self.button_place(self.frame_buttons,self.language.add, 
                             self.settings.menufont, 
-                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+                            self.add_question, 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.edit, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
@@ -180,15 +303,30 @@ class QuizApp():
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
+
+
+
+        
+
+
+
+
         
 
     
 
-    def settings_menu(self):
+    def settings_menu(self, back):
 
-        self.button_destroy()
-        self.list_questions()
-        self.head_menu_label.destroy()
+        # if back from edit section
+        if back == True:
+            self.frames_destroy()
+            self.list_questions()
+
+        #enter from main menu
+        else:
+            self.button_destroy()
+            self.list_questions()
+            self.head_menu_label.destroy()
 
 
     def exit(self):
