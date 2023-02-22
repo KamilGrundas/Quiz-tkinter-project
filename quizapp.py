@@ -5,6 +5,7 @@ from buttons import Buttons
 import sys
 from settings import Settings
 from language import Language
+from questions import Questions
 
 class QuizApp():
     
@@ -115,6 +116,7 @@ class QuizApp():
 
     def list_questions(self):
 
+        self.questions = Questions()
         self.frames()
         self.buttons_settings()
 
@@ -150,6 +152,13 @@ class QuizApp():
 
         self.no_active_questions.pack(side=TOP)
 
+        n = 0
+        for i in self.questions.questions['active_questions']:
+            
+            self.active_questions.insert(n,i['question'])
+            n += 1
+        
+
     def frames_destroy(self):
         self.frame_center.destroy()
         self.frame_buttons.destroy()
@@ -168,7 +177,7 @@ class QuizApp():
 
         self.button_place(self.frame_buttons,self.language.add, 
                             self.settings.menufont, 
-                            self.add_question, 15, CENTER, LEFT)
+                            self.save_question, 15, CENTER, LEFT)
 
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
@@ -211,7 +220,7 @@ class QuizApp():
                                         font=self.settings.edit_section_font,
                                         background=self.buttons.background,
                                         width=4,
-                                        command= lambda: self.good_answer_highlight(1))
+                                        command= lambda: self.good_answer_highlight("A"))
         self.answer_A_label.pack(pady=40)
 
         self.answer_B_label = Button(self.frame_right, 
@@ -219,7 +228,7 @@ class QuizApp():
                                         font=self.settings.edit_section_font,
                                         background=self.buttons.background,
                                         width=4,
-                                        command= lambda: self.good_answer_highlight(2))
+                                        command= lambda: self.good_answer_highlight("B"))
         self.answer_B_label.pack(pady=40)
 
         self.answer_C_label = Button(self.frame_left, 
@@ -227,7 +236,7 @@ class QuizApp():
                                         font=self.settings.edit_section_font,
                                         width= 4,
                                         background=self.buttons.background,
-                                        command= lambda: self.good_answer_highlight(3))
+                                        command= lambda: self.good_answer_highlight("C"))
         self.answer_C_label.pack(pady=40)
 
         self.answer_D_label = Button(self.frame_right, 
@@ -235,7 +244,7 @@ class QuizApp():
                                         font=self.settings.edit_section_font,
                                         background=self.buttons.background,
                                         width=4,
-                                        command= lambda: self.good_answer_highlight(4))
+                                        command= lambda: self.good_answer_highlight("D"))
         self.answer_D_label.pack(pady=40)
 
     def good_answer_highlight(self, answer):
@@ -245,14 +254,29 @@ class QuizApp():
         self.answer_C_label.config(background=self.buttons.bad_answer_background)
         self.answer_D_label.config(background=self.buttons.bad_answer_background)
 
-        if answer == 1:
+        if answer == "A":
             self.answer_A_label.config(background=self.buttons.selected_background)
-        elif answer == 2:
+        elif answer == "B":
             self.answer_B_label.config(background=self.buttons.selected_background)
-        elif answer == 3:
+        elif answer == "C":
             self.answer_C_label.config(background=self.buttons.selected_background)
-        elif answer == 4:
+        elif answer == "D":
             self.answer_D_label.config(background=self.buttons.selected_background)
+
+        self.answer = answer
+
+    def save_question(self):
+
+        self.question = self.question_entry.get()
+        self.answer_A = self.entry_answer_A.get()
+        self.answer_B = self.entry_answer_B.get()
+        self.answer_C = self.entry_answer_C.get()
+        self.answer_D = self.entry_answer_D.get()
+        self.correct_answer = self.answer
+        self.questions.save_question(self.question, self.correct_answer, [self.answer_A, self.answer_B, self.answer_C, self.answer_D])
+
+        self.settings_menu(True)
+
 
     def frames(self):
 
