@@ -32,6 +32,19 @@ class Questions():
         with open("questions.json", "w") as file:
             json.dump(self.questions, file)
 
+    def move_question(self, moved, i):
+
+        if i == 1:
+
+            self.questions['active_questions'].append(moved)
+
+        elif i == 2:
+
+            self.questions['no_active_questions'].append(moved)
+
+        with open("questions.json", "w") as file:
+            json.dump(self.questions, file)
+
 
 
     # questions =[{

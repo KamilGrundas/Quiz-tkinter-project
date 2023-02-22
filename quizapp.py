@@ -152,11 +152,48 @@ class QuizApp():
 
         self.no_active_questions.pack(side=TOP)
 
-        n = 0
+        self.insert_questions()
+
+    def insert_questions(self):
+        
+        self.n = 0
         for i in self.questions.questions['active_questions']:
             
-            self.active_questions.insert(n,i['question'])
-            n += 1
+            self.active_questions.insert(self.n,i['question'])
+            self.n += 1
+
+        self.k = 0
+        for i in self.questions.questions['no_active_questions']:
+            
+            self.no_active_questions.insert(self.n + 1,i['question'])
+            self.k += 1
+
+    def move_question_save(self):
+
+        for question in self.no_active_questions.curselection():
+            moved=self.questions.questions['no_active_questions'].pop(question)
+            self.no_active_questions.delete(question)
+            self.n += 1
+            self.active_questions.insert(self.n,moved['question'])
+            
+            i=1
+
+
+        for question in self.active_questions.curselection():
+            moved=self.questions.questions['active_questions'].pop(question)
+            self.active_questions.delete(question)
+            self.k += 1
+            self.no_active_questions.insert(self.k + 1,moved['question'])
+            print(moved['question'])
+
+            i=2
+
+        self.questions.move_question(moved,i)
+
+        
+
+    
+        
         
 
     def frames_destroy(self):
@@ -272,8 +309,11 @@ class QuizApp():
         self.answer_B = self.entry_answer_B.get()
         self.answer_C = self.entry_answer_C.get()
         self.answer_D = self.entry_answer_D.get()
+
         self.correct_answer = self.answer
-        self.questions.save_question(self.question, self.correct_answer, [self.answer_A, self.answer_B, self.answer_C, self.answer_D])
+
+        if self.question != "":
+            self.questions.save_question(self.question, self.correct_answer, [self.answer_A, self.answer_B, self.answer_C, self.answer_D])
 
         self.settings_menu(True)
 
@@ -313,7 +353,7 @@ class QuizApp():
 
         self.button_place(self.frame_center,self.language.move, 
                             self.settings.menufont, 
-                            lambda: self.main_menu(True), 20, CENTER, LEFT)
+                            self.move_question_save, 20, CENTER, LEFT)
 
         self.button_place(self.frame_buttons,self.language.add, 
                             self.settings.menufont, 
