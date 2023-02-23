@@ -1,6 +1,4 @@
 
-from tkinter import font
-from tkinter import *
 
 class Buttons():
     

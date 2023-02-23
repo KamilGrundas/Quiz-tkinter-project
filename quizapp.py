@@ -1,8 +1,6 @@
 from tkinter import *
-from tkinter import font
 from PIL import ImageTk, Image
 from buttons import Buttons
-import sys
 from settings import Settings
 from language import Language
 from questions import Questions
@@ -168,6 +166,36 @@ class QuizApp():
             self.no_active_questions.insert(self.n + 1,i['question'])
             self.k += 1
 
+    def index_get(self):
+
+        self.index = -1
+
+        for self.index in self.no_active_questions.curselection():
+            self.na=1
+            return self.index
+
+
+        for self.index in self.active_questions.curselection():
+            self.na=2
+            return self.index
+            
+
+
+
+    def edit_question(self, index, na):
+        
+        if na == 1:
+            questions = 'no_active_questions'
+        else:
+            questions = 'active_questions'
+
+        self.question_entry.insert(index=0, string=self.questions.questions[questions][index]['question'])
+        self.entry_answer_A.insert(index=0, string=self.questions.questions[questions][index]['answers'][0])
+        self.entry_answer_B.insert(index=0, string=self.questions.questions[questions][index]['answers'][1])
+        self.entry_answer_C.insert(index=0, string=self.questions.questions[questions][index]['answers'][2])
+        self.entry_answer_D.insert(index=0, string=self.questions.questions[questions][index]['answers'][3])
+        self.good_answer_highlight(self.questions.questions[questions][index]['correct'])
+
     def move_question_save(self):
 
         for question in self.no_active_questions.curselection():
@@ -184,7 +212,6 @@ class QuizApp():
             self.active_questions.delete(question)
             self.k += 1
             self.no_active_questions.insert(self.k + 1,moved['question'])
-            print(moved['question'])
 
             i=2
 
@@ -201,13 +228,20 @@ class QuizApp():
         self.frame_buttons.destroy()
         self.frame_top.destroy()
 
-    def add_question(self):
+    def add_question(self,edit):
+
+        self.index_get()
+        if self.index == -1:
+            return
 
         self.frames_destroy()
         self.frames()
         self.edit_section_labels()
         self.entries_place()
         self.edit_section_buttons()
+
+        if edit == True:
+            self.edit_question(self.index,self.na)
 
     def edit_section_buttons(self):
 
@@ -357,26 +391,16 @@ class QuizApp():
 
         self.button_place(self.frame_buttons,self.language.add, 
                             self.settings.menufont, 
-                            self.add_question, 15, CENTER, LEFT)
+                            lambda: self.add_question(False), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.edit, 
                             self.settings.menufont, 
-                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+                            lambda: self.add_question(True), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.delete, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
-
-
-
-        
-
-
-
-
-        
-
     
 
     def settings_menu(self, back):

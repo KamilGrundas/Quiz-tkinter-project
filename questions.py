@@ -9,8 +9,8 @@ class Questions():
         with open("questions.json") as self.file:
             self.questions = json.load(self.file)
 
-        for i in self.questions['active_questions']:
-            print(i['question'])
+        # for i in self.questions['active_questions']:
+        #     print(i['question'])
 
         # print(self.questions['questions'][0]['answers'][0])
 
