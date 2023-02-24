@@ -16,12 +16,17 @@ class Questions():
 
         # self.save_question("Jaka jutro4 pogoda", "B4", ["faj4na", "słaba", "średnia", "dobra"])
 
+    def delete_question(self, questions, index):
+        
+        removed=self.questions[questions].pop(index)
 
+        with open("questions.json", "w") as file:
+            json.dump(self.questions, file)
 
-    def save_question(self, question, correct, answers):
+    def save_question(self,questions, question, correct, answers):
         
 
-        self.questions['active_questions'].append(
+        self.questions[questions].append(
                     
                     {
                     'question': str(question),

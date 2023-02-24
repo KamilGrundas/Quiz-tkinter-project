@@ -185,16 +185,16 @@ class QuizApp():
     def edit_question(self, index, na):
         
         if na == 1:
-            questions = 'no_active_questions'
+            self.question_to_save = 'no_active_questions'
         else:
-            questions = 'active_questions'
+            self.question_to_save = 'active_questions'
 
-        self.question_entry.insert(index=0, string=self.questions.questions[questions][index]['question'])
-        self.entry_answer_A.insert(index=0, string=self.questions.questions[questions][index]['answers'][0])
-        self.entry_answer_B.insert(index=0, string=self.questions.questions[questions][index]['answers'][1])
-        self.entry_answer_C.insert(index=0, string=self.questions.questions[questions][index]['answers'][2])
-        self.entry_answer_D.insert(index=0, string=self.questions.questions[questions][index]['answers'][3])
-        self.good_answer_highlight(self.questions.questions[questions][index]['correct'])
+        self.question_entry.insert(index=0, string=self.questions.questions[self.question_to_save][index]['question'])
+        self.entry_answer_A.insert(index=0, string=self.questions.questions[self.question_to_save][index]['answers'][0])
+        self.entry_answer_B.insert(index=0, string=self.questions.questions[self.question_to_save][index]['answers'][1])
+        self.entry_answer_C.insert(index=0, string=self.questions.questions[self.question_to_save][index]['answers'][2])
+        self.entry_answer_D.insert(index=0, string=self.questions.questions[self.question_to_save][index]['answers'][3])
+        self.good_answer_highlight(self.questions.questions[self.question_to_save][index]['correct'])
 
     def move_question_save(self):
 
@@ -231,9 +231,11 @@ class QuizApp():
     def add_question(self,edit):
 
         self.index_get()
-        if self.index == -1:
-            return
 
+        if self.index == -1 and edit == True:
+            return
+        
+        self.question_to_save = 'active_questions'
         self.frames_destroy()
         self.frames()
         self.edit_section_labels()
@@ -336,9 +338,25 @@ class QuizApp():
 
         self.answer = answer
 
+    def delete_question(self):
+        
+        self.index_get()
+        if self.na == 1:
+            self.question_to_save = 'no_active_questions'
+            question = self.no_active_questions
+        else:
+            self.question_to_save = 'active_questions'
+            question = self.active_questions
+
+        question.delete(self.index)
+
+        self.questions.delete_question(self.question_to_save, self.index)
+
     def save_question(self):
 
+        
         self.question = self.question_entry.get()
+
         self.answer_A = self.entry_answer_A.get()
         self.answer_B = self.entry_answer_B.get()
         self.answer_C = self.entry_answer_C.get()
@@ -347,7 +365,7 @@ class QuizApp():
         self.correct_answer = self.answer
 
         if self.question != "":
-            self.questions.save_question(self.question, self.correct_answer, [self.answer_A, self.answer_B, self.answer_C, self.answer_D])
+            self.questions.save_question(self.question_to_save,self.question, self.correct_answer, [self.answer_A, self.answer_B, self.answer_C, self.answer_D])
 
         self.settings_menu(True)
 
@@ -397,7 +415,7 @@ class QuizApp():
                             lambda: self.add_question(True), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.delete, 
                             self.settings.menufont, 
-                            lambda: self.main_menu(True), 15, CENTER, LEFT)
+                            self.delete_question, 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
