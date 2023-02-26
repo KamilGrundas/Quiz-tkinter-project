@@ -15,6 +15,7 @@ class Language():
         self.no_active_questions = "No active questions"
         self.move = "Move"
         self.add = "Add"
+        self.save = "Save"
         self.edit = "Edit"
         self.delete = "Delete"
         self.yourscore = "Your score:"

@@ -240,17 +240,27 @@ class QuizApp():
         self.frames()
         self.edit_section_labels()
         self.entries_place()
-        self.edit_section_buttons()
+
 
         if edit == True:
             self.edit_question(self.index,self.na)
+            self.edit_section_buttons(True)
+        else:
+            self.edit_section_buttons(False)
 
-    def edit_section_buttons(self):
+    def edit_section_buttons(self,edit):
 
+        if edit == True:
 
-        self.button_place(self.frame_buttons,self.language.add, 
+            self.button_place(self.frame_buttons,self.language.save, 
                             self.settings.menufont, 
-                            self.save_question, 15, CENTER, LEFT)
+                            lambda: self.save_question(True), 15, CENTER, LEFT)
+
+        if edit == False:
+
+            self.button_place(self.frame_buttons,self.language.add, 
+                            self.settings.menufont, 
+                            lambda: self.save_question(False), 15, CENTER, LEFT)
 
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
@@ -338,9 +348,10 @@ class QuizApp():
 
         self.answer = answer
 
-    def delete_question(self):
-        
-        self.index_get()
+    def delete_question(self, edit):
+
+        if edit == False: 
+            self.index_get()
         if self.na == 1:
             self.question_to_save = 'no_active_questions'
             question = self.no_active_questions
@@ -348,11 +359,15 @@ class QuizApp():
             self.question_to_save = 'active_questions'
             question = self.active_questions
 
-        question.delete(self.index)
+        if edit == False:
+            question.delete(self.index)
 
         self.questions.delete_question(self.question_to_save, self.index)
 
-    def save_question(self):
+    def save_question(self,edit):
+
+        if edit == True:
+            self.delete_question(True)
 
         
         self.question = self.question_entry.get()
@@ -415,7 +430,7 @@ class QuizApp():
                             lambda: self.add_question(True), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.delete, 
                             self.settings.menufont, 
-                            self.delete_question, 15, CENTER, LEFT)
+                            lambda: self.delete_question(False), 15, CENTER, LEFT)
         self.button_place(self.frame_buttons,self.language.back, 
                             self.settings.menufont, 
                             lambda: self.main_menu(True), 15, CENTER, LEFT)
