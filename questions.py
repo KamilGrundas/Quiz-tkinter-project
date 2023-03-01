@@ -1,5 +1,5 @@
 import json
-
+import random
 
 
 class Questions():
@@ -8,6 +8,8 @@ class Questions():
 
         with open("questions.json") as self.file:
             self.questions = json.load(self.file)
+        
+        self.draw_question()
 
         # for i in self.questions['active_questions']:
         #     print(i['question'])
@@ -15,6 +17,20 @@ class Questions():
         # print(self.questions['questions'][0]['answers'][0])
 
         # self.save_question("Jaka jutro4 pogoda", "B4", ["faj4na", "słaba", "średnia", "dobra"])
+
+    def draw_question(self):
+
+        index_set = []
+
+        while len(set(index_set)) != 5:
+            index = random.randint(0, len(self.questions['active_questions'])-1)
+            index_set.append(index)
+
+
+        print(set(index_set))
+
+        
+
 
     def delete_question(self, questions, index):
         
@@ -50,7 +66,7 @@ class Questions():
         with open("questions.json", "w") as file:
             json.dump(self.questions, file)
 
-
+gowno=Questions()
 
     # questions =[{
     #                 'question': "Jaka jest stolica Polski?",
