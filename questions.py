@@ -21,16 +21,15 @@ class Questions():
     def draw_question(self):
 
         index_set = []
+        if len(self.questions['active_questions']) >= 5:
 
-        while len(set(index_set)) != 5:
-            index = random.randint(0, len(self.questions['active_questions'])-1)
-            index_set.append(index)
-
-
-        print(set(index_set))
-
-        
-
+            while len(set(index_set)) != 5:
+                index = random.randint(0, len(self.questions['active_questions'])-1)
+                index_set.append(index)
+        else:
+            return print("Number of questions is too low")
+            
+        self.index_list = list(set(index_set))
 
     def delete_question(self, questions, index):
         
@@ -66,7 +65,7 @@ class Questions():
         with open("questions.json", "w") as file:
             json.dump(self.questions, file)
 
-gowno=Questions()
+gg=Questions()
 
     # questions =[{
     #                 'question': "Jaka jest stolica Polski?",
