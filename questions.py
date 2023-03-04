@@ -19,7 +19,7 @@ class Questions():
         # self.save_question("Jaka jutro4 pogoda", "B4", ["faj4na", "słaba", "średnia", "dobra"])
 
     def draw_question(self):
-
+        self.error = False
         index_set = []
         if len(self.questions['active_questions']) >= 5:
 
@@ -27,7 +27,8 @@ class Questions():
                 index = random.randint(0, len(self.questions['active_questions'])-1)
                 index_set.append(index)
         else:
-            return print("Number of questions is too low")
+            self.error = True
+            return self.error
             
         self.index_list = list(set(index_set))
 
