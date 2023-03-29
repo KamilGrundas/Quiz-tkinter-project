@@ -16,8 +16,7 @@ class QuizApp():
         if change == True:
             self.language.another_language()
 
-        self.button_destroy()
-        self.main_menu(False)
+        self.main_menu(True)
 
         
     def __init__(self):
@@ -42,13 +41,13 @@ class QuizApp():
         self.head_to_label = ImageTk.PhotoImage(self.resized_head)
 
         self.questions = Questions()
-        #Define list of created buttons
-        self.buttons_list = []
-        self.error_exist = False
-        self.frames()
 
+        #Error log
+        self.error_exist = False
+
+        self.frames()
         self.head_menu_place()
-        self.language_buttons()
+        self.language_buttons(False)
         #Place buttons with (text, xplace, yplace, width, command(language selection))
 
     def head_menu_place(self):
@@ -56,14 +55,14 @@ class QuizApp():
         self.head_menu_label = Label(self.frame_top, image=self.head_to_label,borderwidth=0)
         self.head_menu_label.pack(anchor=CENTER)
 
+    def language_buttons(self, logo):
 
-
-
-    def language_buttons(self):
+        if logo == True:
+            self.frames_destroy()
+            self.frames()
+            self.head_menu_place()
 
         self.buttons = Buttons()
-        self.button_destroy()
-
         self.language = Language()
 
         self.button_place(self.frame_center,self.language.a_language, 
@@ -87,17 +86,9 @@ class QuizApp():
                                     state = ACTIVE,
                                     width=width)
 
-        self.buttons_list.append(self.button)
-
         self.button.pack(pady=10, padx=10, anchor=position, side=side)
 
         
-
-    def button_destroy(self):
-
-        for self.button in self.buttons_list:
-            self.button.destroy()
-
     def main_menu(self, logo):
 
         if logo == True:
@@ -105,13 +96,10 @@ class QuizApp():
             self.frames()
             self.head_menu_place()
 
-
-
-
         self.button_place(self.frame_center,self.language.play, self.settings.menufont, self.play, 20, CENTER, TOP)
         self.button_place(self.frame_center,self.language.exit, self.settings.menufont, self.exit, 20, CENTER, TOP)
         self.button_place(self.frame_buttons,self.language.settings, self.settings.settingsfont,lambda: self.settings_menu(False), 20, SE, BOTTOM)
-        self.button_place(self.frame_buttons,self.language.language, self.settings.settingsfont, self.language_buttons, 20, SE, BOTTOM)
+        self.button_place(self.frame_buttons,self.language.language, self.settings.settingsfont,lambda: self.language_buttons(True), 20, SE, BOTTOM)
 
     #Displays error
     def error_display(self,text):
@@ -142,6 +130,7 @@ class QuizApp():
 
         #Draw questions
         self.questions.draw_question()
+        print(self.questions.index_list)
         #Check for errors
         if self.questions.error == False:
             print("graj")
@@ -486,7 +475,6 @@ class QuizApp():
         #enter from main menu
         else:
             self.frames_destroy()
-            self.button_destroy()
             self.list_questions()
             self.head_menu_label.destroy()
 
